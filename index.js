@@ -37,7 +37,8 @@ var createPawprint = function(httpRequest, httpResponse) {
       'raw_http_file':{
         'http_request':httpRequest,
         'http_response':httpResponse
-      }
+      },
+      'public':true
     }
   }, (error, response, body) => {
     if (!error && response.statusCode >= 200 && response.statusCode < 300) {
