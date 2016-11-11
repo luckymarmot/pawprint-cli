@@ -21,6 +21,7 @@ var logPawprintCreation = function(pawprintData) {
 };
 
 var logError = function(errorMessage) {
+  log('')
   log(chalk.red.bold('  𐄂 Error'))
   var lines = errorMessage.split('\n')
   for (var i = 0; i < lines.length; i++) {
@@ -28,7 +29,11 @@ var logError = function(errorMessage) {
   }
 }
 
-var createPawprint = function(httpRequest, httpResponse) {
+var createPawprint = function(httpRequest, httpResponse, isPrivate) {
+  var isPublic = true;
+  if (isPrivate === true) {
+    isPublic = false;
+  }
   request({
     uri: 'http://localluckymarmot.com:8000/api/v3/pawprints/',
     method: 'POST',
@@ -38,7 +43,7 @@ var createPawprint = function(httpRequest, httpResponse) {
         'http_request':httpRequest,
         'http_response':httpResponse
       },
-      'public':true
+      'public':isPublic,
     }
   }, (error, response, body) => {
     if (!error && response.statusCode >= 200 && response.statusCode < 300) {
@@ -49,13 +54,13 @@ var createPawprint = function(httpRequest, httpResponse) {
   })
 };
 
+cmd.description('Utility tool to create and manage Pawprints HTTP traces.') 
+   .version('1.0.0')
+   .option('-p, --private', 'Create a private Pawprint')
+   .parse(process.argv);
+
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
-
-cmd.command('pawprint-node')
-   .description('Utility tool to create and manage Pawprints HTTP traces.') 
-   .version('1.0.0')
-   .parse(process.argv);
 
 var trace = '';
 
@@ -68,8 +73,9 @@ process.stdin.on('end', () => {
   if (typeof p.request !== 'string' || typeof p.response !== 'string' ||
       p.request === '' || p.response === '') {
     logError('Invalid curl trace.\n' +
-             'Try: curl --trace - http://httpbin.org/get\n' +
+             'Try: curl --trace - http://httpbin.org/get | pawpt\n' +
              'Note that --trace should be followed by a dash (--trace -)')
+    return;
   }
-  createPawprint(p.request, p.response);
+  createPawprint(p.request, p.response, cmd.private);
 });

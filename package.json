@@ -1,5 +1,5 @@
 {
-  "name": "pawprint-node",
+  "name": "pawpt",
   "version": "1.0.0",
   "description": "A Node.js utility tool to create and manage Pawprints HTTP traces.",
   "main": "index.js",
