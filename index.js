@@ -2,10 +2,10 @@
 
 var parser = require('curl-trace-parser');
 var request = require('request');
+var chalk = require('chalk');
 var log = console.log;
 
 var logPawprintCreation = function(pawprintData, isCopied) {
-  var chalk = require('chalk');
   log('');
   log(chalk.bold.green('  ✓ Pawprint Created') + ' ' +
       (pawprintData.public ? chalk.bold.cyan('[Public]') :
@@ -38,7 +38,7 @@ var createPawprint = function(httpRequest, httpResponse, isPrivate, cb) {
     isPublic = false;
   }
   request({
-    uri: 'http://localluckymarmot.com:8000/api/v3/pawprints/',
+    uri: 'https://paw.cloud/api/v3/pawprints/',
     method: 'POST',
     json: {
       'name':'curl trace',
